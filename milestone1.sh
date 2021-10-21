@@ -10,7 +10,7 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
  "type": "record",
  "name": "Customer",
  "fields": [
-     {"name":"date", "type": "date"},
+     {"name":"dateCreated", "type": "date"},
      {"name":"customerId", "type": "string"},
      {"name":"firstName", type:"string"},
      {"name":"lastName", type:"string"},
@@ -50,7 +50,7 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
  "type": "record",
  "name": "OrderConfirmed",
  "fields": [
-     {"name":"date", "type": "date"},
+     {"name":"timestamp", "type": "timestamp-millis"},
      {"name":"orderId", "type": "string"}
    ]
 }
@@ -60,7 +60,7 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
  "type": "record",
  "name": "OrderPicked",
  "fields": [
-     {"name":"date", "type": "date"},
+     {"name":"timestamp", "type": "timestamp-millis"},
      {"name":"orderId", "type": "string"},
      {"name":"customer", type:"Customer"}
    ]
@@ -71,7 +71,7 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
  "type": "record",
  "name": "OrderReady",
  "fields": [
-     {"name":"date", "type": "date"},
+     {"name":"timestamp", "type": "timestamp-millis"},
      {"name":"orderId", "type": "string"}
    ]
 }
@@ -83,7 +83,7 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
  "type": "record",
  "name": "OrderError",
  "fields": [
-     {"name":"date", "type": "date"},
+     {"name":"timestamp", "type": "timestamp-millis"},
      {"name":"orderId", "type": "string"}
      {"name":"reason", "type":["OrderReady", "OrderConfirmed", "OrderReady" ],
    ]
