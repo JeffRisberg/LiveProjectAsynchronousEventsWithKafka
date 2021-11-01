@@ -95,21 +95,23 @@ zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties & kafka
 bin/kafka-topics.sh --describe --topic milestone1-order --bootstrap-server localhost:9092 --replication-factor 3 --partitions 11
 
 ## Modify the topic created in Step 3 by increasing its retention time to three days. For more information on retention policies, review the last bullet point in the notes below.
+bin/kafka-topics.sh --describe --topic milestone1-order --bootstrap-server localhost:9092 --config retention.ms=10800000
 
 ## Create additional Kafka topics that use the same configuration as the topic created in Step 3.
---replication-factor <n> --partitions <n>
 
-Create a Kafka topic that will contain order confirmed events, and verify it exists.
-bin/kafka-topics.sh --describe --topic milestone1-order-confirmed --bootstrap-server localhost:9092
+### Create a Kafka topic that will contain order confirmed events, and verify it exists.
+bin/kafka-topics.sh --describe --topic milestone1-order-confirmed --bootstrap-server localhost:9092 --replication-factor 3 --partitions 11
 
-Create a Kafka topic that will contain order picked and packed events, and verify it exists.
-bin/kafka-topics.sh --describe --topic milestone1-order-picked --bootstrap-server localhost:9092
+### Create a Kafka topic that will contain order picked and packed events, and verify it exists.
+bin/kafka-topics.sh --describe --topic milestone1-order-picked --bootstrap-server localhost:9092 --replication-factor 3 --partitions 11
 
-Create a Kafka topic that will contain notification events, and verify it exists.
-bin/kafka-topics.sh --describe --topic milestone1-order-ready --bootstrap-server localhost:9092
+### Create a Kafka topic that will contain notification events, and verify it exists.
+bin/kafka-topics.sh --describe --topic milestone1-order-ready --bootstrap-server localhost:9092 --replication-factor 3 --partitions 11
 
-Create a Kafka topic that will contain error events, and verify it exists.
-bin/kafka-topics.sh --describe --topic milestone1-order-error --bootstrap-server localhost:9092
+### Create a Kafka topic that will contain error events, and verify it exists.
+bin/kafka-topics.sh --describe --topic milestone1-order-error --bootstrap-server localhost:9092 --replication-factor 3 --partitions 11
+
+## produce content
 
 bin/kafka-console-producer.sh --topic milestone1-order --bootstrap-server localhost:9092
 {"orderId": "1234",
