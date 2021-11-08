@@ -2,25 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 	"html/template"
 	"net/http"
 	"os"
 )
-
-func charities(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Here are your charities"))
-}
-
-func donors(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Here are your donors"))
-}
-
-func process(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("tmpl.html")
-	daysOfWeek := []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
-	t.Execute(w, daysOfWeek)
-}
 
 type Data struct {
 	Title   string
@@ -67,9 +53,6 @@ func main() {
 	e := <-deliveryChan
 	e.(*kafka.Message)
 
-	http.HandleFunc("/charities", charities)
-	http.HandleFunc("/donors", donors)
-	http.HandleFunc("/process", process)
 	http.HandleFunc("/process2", process2)
 
 	http.Handle("/", http.FileServer(http.Dir("./src")))
