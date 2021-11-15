@@ -3,6 +3,8 @@ package config
 import (
 	"os"
 	"strconv"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -18,9 +20,24 @@ const (
 	// value of the kafka broker address
 	BrokerAddressEnvVar = "BROKER_ADDRESS"
 
-	defaultPort          = 8080        // used if PORT not set
-	defaultBrokerAddress = "localhost" // used if BROKER_ADDRESS not set
+	defaultLogLevel      = logrus.DebugLevel // used if LOG_LEVEL not set
+	defaultPort          = 8080              // used if PORT not set
+	defaultBrokerAddress = "localhost"       // used if BROKER_ADDRESS not set
 )
+
+// LogLevel returns the log level set in the environment, or debug if not defined
+func LogLevel() logrus.Level {
+	var (
+		level logrus.Level
+		err   error
+	)
+
+	if level, err = logrus.ParseLevel(os.Getenv(LogLevelEnvVar)); err != nil {
+		return defaultLogLevel
+	}
+
+	return level
+}
 
 // Port returns the port the service should listen on, or 3000 if not defined or
 // is not a valid port

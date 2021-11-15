@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
+	//"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 	"html/template"
 	"net/http"
 	"os"
@@ -27,31 +27,33 @@ func main() {
 		os.Exit(1)
 	}
 
-	broker := os.Args[1]
-	topic := os.Args[2]
+	/*
+		broker := os.Args[1]
+		topic := os.Args[2]
 
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": broker})
+		p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": broker})
 
-	if err != nil {
-		fmt.Printf("Failed to create producer: %s\n", err)
-		os.Exit(1)
-	}
+		if err != nil {
+			fmt.Printf("Failed to create producer: %s\n", err)
+			os.Exit(1)
+		}
 
-	fmt.Printf("Created Producer %v\n", p)
+		fmt.Printf("Created Producer %v\n", p)
 
-	// Optional delivery channel, if not specified the Producer object's
-	// .Events channel is used.
-	deliveryChan := make(chan kafka.Event)
+		// Optional delivery channel, if not specified the Producer object's
+		// .Events channel is used.
+		deliveryChan := make(chan kafka.Event)
 
-	value := "Hello Go!"
-	err = p.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          []byte(value),
-		Headers:        []kafka.Header{{Key: "myTestHeader", Value: []byte("header values are binary")}},
-	}, deliveryChan)
+		value := "Hello Go!"
+		err = p.Produce(&kafka.Message{
+			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+			Value:          []byte(value),
+			Headers:        []kafka.Header{{Key: "myTestHeader", Value: []byte("header values are binary")}},
+		}, deliveryChan)
 
-	e := <-deliveryChan
-	e.(*kafka.Message)
+		e := <-deliveryChan
+		e.(*kafka.Message)
+	*/
 
 	http.HandleFunc("/process2", process2)
 
