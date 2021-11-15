@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	//"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 	"html/template"
 	"net/http"
-	"os"
 )
 
 type Data struct {
@@ -21,13 +19,13 @@ func process2(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <broker> <topic>\n",
-			os.Args[0])
-		os.Exit(1)
-	}
-
 	/*
+		if len(os.Args) != 3 {
+			fmt.Fprintf(os.Stderr, "Usage: %s <broker> <topic>\n",
+				os.Args[0])
+			os.Exit(1)
+		}
+
 		broker := os.Args[1]
 		topic := os.Args[2]
 
