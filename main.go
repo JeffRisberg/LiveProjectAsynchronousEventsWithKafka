@@ -1,9 +1,11 @@
 package main
 
 import (
-	//"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
-	"html/template"
-	"net/http"
+	"context"
+	"fmt"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"os"
+	"time"
 )
 
 type Data struct {
@@ -12,13 +14,26 @@ type Data struct {
 	Other   []int
 }
 
+/*
 func process2(w http.ResponseWriter, r *http.Request) {
 	data := &Data{"Lord of the Rings", []string{"a", "b", "c"}, []int{1, 2, 3}}
 	t, _ := template.ParseFiles("tmpl2.html")
 	t.Execute(w, data)
 }
+ */
 
 func main() {
+	broker := os.Args[1]
+
+	// Create a new AdminClient.
+	// AdminClient can also be instantiated using an existing
+	// Producer or Consumer instance, see NewAdminClientFromProducer and
+	// NewAdminClientFromConsumer.
+	a, err := kafka.NewAdminClient(&kafka.ConfigMap{"bootstrap.servers": broker})
+	if err != nil {
+		fmt.Printf("Failed to create Admin client: %s\n", err)
+		os.Exit(1)
+	}
 	/*
 		if len(os.Args) != 3 {
 			fmt.Fprintf(os.Stderr, "Usage: %s <broker> <topic>\n",
@@ -53,12 +68,12 @@ func main() {
 		e.(*kafka.Message)
 	*/
 
-	http.HandleFunc("/process2", process2)
+	//http.HandleFunc("/process2", process2)
 
-	http.Handle("/", http.FileServer(http.Dir("./src")))
+	//http.Handle("/", http.FileServer(http.Dir("./src")))
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
+	//if err := http.ListenAndServe(":8080", nil); err != nil {
+	//	panic(err)
 	}
 
 }

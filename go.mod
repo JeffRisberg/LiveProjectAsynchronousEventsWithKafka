@@ -1,4 +1,4 @@
-module GO01
+module LiveProjectAsynchronousEventsWithKafka
 
 go 1.16
 
