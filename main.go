@@ -23,7 +23,10 @@ func process2(w http.ResponseWriter, r *http.Request) {
  */
 
 func main() {
-	broker := os.Args[1]
+	broker := "localhost:9092"
+	topic := "qwerty"
+	numParts := 1
+	replicationFactor := 1
 
 	// Create a new AdminClient.
 	// AdminClient can also be instantiated using an existing
@@ -34,6 +37,38 @@ func main() {
 		fmt.Printf("Failed to create Admin client: %s\n", err)
 		os.Exit(1)
 	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	// Create topics on cluster.
+	// Set Admin options to wait for the operation to finish (or at most 60s)
+	maxDur, err := time.ParseDuration("60s")
+	if err != nil {
+		panic("ParseDuration(60s)")
+	}
+	results, err := a.CreateTopics(
+		ctx,
+		// Multiple topics can be created simultaneously
+		// by providing more TopicSpecification structs here.
+		[]kafka.TopicSpecification{{
+			Topic:             topic,
+			NumPartitions:     numParts,
+			ReplicationFactor: replicationFactor}},
+		// Admin options
+		kafka.SetAdminOperationTimeout(maxDur))
+
+	if err != nil {
+		fmt.Printf("Failed to create topic: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Print results
+	for _, result := range results {
+		fmt.Printf("%s\n", result)
+	}
+
+	a.Close()
 	/*
 		if len(os.Args) != 3 {
 			fmt.Fprintf(os.Stderr, "Usage: %s <broker> <topic>\n",
@@ -74,6 +109,4 @@ func main() {
 
 	//if err := http.ListenAndServe(":8080", nil); err != nil {
 	//	panic(err)
-	}
-
 }

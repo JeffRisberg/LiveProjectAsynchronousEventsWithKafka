@@ -1,10 +1,9 @@
 package events
 
 import (
-	"time"
-
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/models"
 	"github.com/google/uuid"
+	"time"
 )
 
 // OrderReceived represents an order that was received in the system and will be published to our messaging system
