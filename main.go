@@ -12,6 +12,10 @@ import (
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/publisher"
 )
 
+func health(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("The order service is running"))
+}
+
 func orders(w http.ResponseWriter, r *http.Request) {
 	topic := config.OrderReceivedTopicName
 
@@ -40,6 +44,7 @@ func main() {
 	}
 
 	http.HandleFunc("/orders", orders)
+	http.HandleFunc("/health", health)
 
 	if err := server.ListenAndServe(); err != nil {
 		panic(err)
