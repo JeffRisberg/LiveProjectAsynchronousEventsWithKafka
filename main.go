@@ -28,14 +28,20 @@ func orders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	publisher.PublishEvent(event, topic)
+
+	w.Write([]byte("Message sent to topic"))
 }
 
 func main() {
 	log.Info("startup")
 
+	server := &http.Server{
+		Addr: "0.0.0.0:8080",
+	}
+
 	http.HandleFunc("/orders", orders)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		panic(err)
 	}
 }
