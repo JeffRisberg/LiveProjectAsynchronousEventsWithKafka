@@ -1,8 +1,14 @@
-package main
+package server
 
 import (
 	"fmt"
+	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/config"
+	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/events"
+	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/models"
+	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/publisher"
+	"github.com/google/uuid"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -14,14 +20,28 @@ type Server struct {
 	Port int
 }
 
-// Health returns a HTTP 200 status code indicating the service is alive
-func Health(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func health(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("The order service is running"))
 }
 
-// Root returns a HTTP 200 status code
-func Root(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func orders(w http.ResponseWriter, r *http.Request) {
+	topic := config.OrderReceivedTopicName
+
+	var order = models.Order{
+		ID: uuid.New(),
+	}
+
+	var event = events.OrderReceived{
+		EventBase: events.BaseEvent{
+			EventID:        uuid.New(),
+			EventTimestamp: time.Now(),
+		},
+		EventBody: order,
+	}
+
+	publisher.PublishEvent(event, topic)
+
+	w.Write([]byte("Message sent to topic"))
 }
 
 // ListenAndServe will start the web server and listen for requests
@@ -37,8 +57,8 @@ func (s *Server) ListenAndServe() error {
 	r.Use(middleware.Recoverer) // handles any unhandles errors and returns a 500
 
 	// setup supported routes
-	r.Get("/", Root)
-	r.Get("/health", Health)
+	r.Get("/", orders)
+	r.Get("/health", health)
 
 	address := fmt.Sprintf(":%d", s.Port)
 	log.WithField("address", address).Info("server starting")
