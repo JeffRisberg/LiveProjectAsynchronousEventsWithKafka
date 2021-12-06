@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/config"
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/server"
 	log "github.com/sirupsen/logrus"
 )
@@ -8,7 +9,9 @@ import (
 func main() {
 	log.Info("startup")
 
-	if err := server.ListenAndServe(); err != nil {
-		panic(err)
+	s := server.Server{
+		Port: config.Port(),
 	}
+
+	log.Fatal(s.ListenAndServe())
 }
