@@ -1,10 +1,9 @@
 package config
 
 import (
+	"github.com/sirupsen/logrus"
 	"os"
 	"strconv"
-
-	"github.com/sirupsen/logrus"
 )
 
 const (

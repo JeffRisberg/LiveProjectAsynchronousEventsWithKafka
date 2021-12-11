@@ -10,7 +10,7 @@ import (
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/events"
 )
 
-// PublishEvent will publish the specified event to the messaging system (currently running on localhost)
+// PublishEvent publishes specified event to the messaging system
 func PublishEvent(event events.Event, topic string) error {
 
 	log.WithField("event", event).Info("attempting to publish event")
