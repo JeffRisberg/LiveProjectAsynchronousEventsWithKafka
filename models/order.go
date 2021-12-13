@@ -33,3 +33,8 @@ type Customer struct {
 	EmailAddress    string  `json:"emailAddress"`
 	ShippingAddress Address `json:"shippingAddress"`
 }
+
+// Confirmation
+type Confirmation struct {
+	ID uuid.UUID `json:"id,omitempty"`
+}

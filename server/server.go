@@ -53,10 +53,11 @@ func ReceiveOrder(w http.ResponseWriter, r *http.Request) {
 		log.WithField("orderID", o.ID).Error(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 
+		// publish to deadletterqueue
 		return
 	}
 
-	e := translateOrderToEvent(o)
+	e := translateOrderToReceivedEvent(o)
 
 	log.WithField("event", e).Info("transformed order to event")
 
@@ -68,6 +69,16 @@ func ReceiveOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.WithField("event", e).Info("published event")
+
+	e = translateOrderToConfirmedEvent(o)
+
+	// publish to order Confirmed
+	if err = publisher.PublishEvent(e, config.OrderConfirmedTopicName); err != nil {
+		log.WithField("orderID", o.ID).Error(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
+	}
 
 	w.WriteHeader(http.StatusCreated)
 }
@@ -107,8 +118,20 @@ func validate(o models.Order) error {
 	return nil
 }
 
-func translateOrderToEvent(o models.Order) events.Event {
+func translateOrderToReceivedEvent(o models.Order) events.Event {
 	var event = events.OrderReceived{
+		EventBase: events.BaseEvent{
+			EventID:        uuid.New(),
+			EventTimestamp: time.Now(),
+		},
+		EventBody: o,
+	}
+
+	return event
+}
+
+func translateOrderToConfirmedEvent(o models.Order) events.Event {
+	var event = events.OrderConfirmed{
 		EventBase: events.BaseEvent{
 			EventID:        uuid.New(),
 			EventTimestamp: time.Now(),
