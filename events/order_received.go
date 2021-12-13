@@ -6,28 +6,28 @@ import (
 	"time"
 )
 
-// OrderConfirmed represents an order that was received in the system and will be published to our messaging system
-type OrderConfirmed struct {
+// OrderReceived represents an order that was received in the system and will be published to our messaging system
+type OrderReceived struct {
 	EventBase BaseEvent
 	EventBody models.Order
 }
 
 // ID returns the unique identifier of the event
-func (or OrderConfirmed) ID() uuid.UUID {
+func (or OrderReceived) ID() uuid.UUID {
 	return or.EventBase.EventID
 }
 
 // Name returns the name of the event
-func (or OrderConfirmed) Name() string {
-	return "OrderConfirmed"
+func (or OrderReceived) Name() string {
+	return "OrderReceived"
 }
 
 // Timestamp returns the unique timestamp of the event
-func (or OrderConfirmed) Timestamp() time.Time {
+func (or OrderReceived) Timestamp() time.Time {
 	return or.EventBase.EventTimestamp
 }
 
 // Body returns the body content of the event
-func (or OrderConfirmed) Body() interface{} {
+func (or OrderReceived) Body() interface{} {
 	return or.EventBody
 }

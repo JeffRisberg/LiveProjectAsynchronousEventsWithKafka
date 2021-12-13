@@ -31,6 +31,28 @@ func Health(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// HandleError will publish an error event to Kafka
+func HandleError(event events.Event) {
+	var err error
+
+	e := translateToErrorEvent(event)
+	if err = publisher.PublishEvent(e, config.ErrorsTopicName); err != nil {
+		log.WithField("error", err).
+			WithField("topic", config.ErrorsTopicName).
+			Error("an issue ocurred publishing an error event to Kafka")
+	}
+}
+
+func translateToErrorEvent(event events.Event) events.Event {
+	return events.Error{
+		EventBase: events.BaseEvent{
+			EventID:        uuid.New(),
+			EventTimestamp: time.Now(),
+		},
+		EventBody: event,
+	}
+}
+
 // ReceiveOrder handler will accept an order, validate the payload and publish an OrderReceived event to Kafka.
 // returns a HTTP 201 status code indicating an order was created
 func ReceiveOrder(w http.ResponseWriter, r *http.Request) {
