@@ -70,7 +70,7 @@ func (db DB) InsertEvent(event events.Event, tx pgx.Tx) error {
 
 // Connect creates a new connection to the database
 func (db DB) Connect() (*pgx.Conn, error) {
-	url := fmt.Sprintf("postgres://%s:%s@%s/%s", db.Username, db.Password, db.Address, db.Database)
+	url := fmt.Sprintf("mysql://%s:%s@%s/%s", db.Username, db.Password, db.Address, db.Database)
 	log.WithField("url", url).Info("attempting to connect to DB")
 
 	conn := mysql.MustOpen(url)
