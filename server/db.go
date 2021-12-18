@@ -8,8 +8,8 @@ import (
 
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/config"
 	"github.com/JeffRisberg/LiveProjectAsynchronousEventsWithKafka/events"
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
+	"github.com/gopsql/mysql"
+	"github.com/gopsql/psql"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -73,10 +73,7 @@ func (db DB) Connect() (*pgx.Conn, error) {
 	url := fmt.Sprintf("postgres://%s:%s@%s/%s", db.Username, db.Password, db.Address, db.Database)
 	log.WithField("url", url).Info("attempting to connect to DB")
 
-	conn, err := pgx.Connect(context.Background(), url)
-	if err != nil {
-		return nil, err
-	}
+	conn := mysql.MustOpen(url)
 
 	log.Info("successfully connected to DB")
 
