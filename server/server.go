@@ -81,6 +81,9 @@ func ReceiveOrder(w http.ResponseWriter, r *http.Request) {
 
 	e := translateOrderToReceivedEvent(o)
 
+	//db := NewDB()
+	InsertEvent(e)
+
 	log.WithField("event", e).Info("transformed order to event")
 
 	if err = publisher.PublishEvent(e, config.OrderReceivedTopicName); err != nil {
