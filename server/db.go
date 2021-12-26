@@ -30,6 +30,7 @@ func NewDB() DB {
 
 // EventExists will check to see if an event has already been processed
 func EventExists(event events.Event) (bool, error) {
+	var id string
 
 	db, err := sql.Open("mysql", "developer:123456@/liveproject")
 	if err != nil {
@@ -37,12 +38,14 @@ func EventExists(event events.Event) (bool, error) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id from processed_events where id=$1 and event_name=$2", event.ID(), event.Name())
+	rows, err := db.Query("select id from processed_events where id=? and event_name=?", event.ID(), event.Name())
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
-	return false, nil
+	rows.Scan(&id)
+
+	return len(id) > 0, nil
 }
 
 // InsertEvent will insert a row into the processed_events table to indicate an event was processed.
@@ -53,7 +56,7 @@ func InsertEvent(event events.Event) error {
 	}
 	defer db.Close()
 
-	stmt, err := db.Prepare("insert into processed_events (id, event_name, processed_timestamp) values ($1, $2, $3)")
+	stmt, err := db.Prepare("insert into processed_events (id, event_name, processed_timestamp) values (?, ?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -81,7 +81,9 @@ func ReceiveOrder(w http.ResponseWriter, r *http.Request) {
 
 	e := translateOrderToReceivedEvent(o)
 
-	//db := NewDB()
+	res, _ := EventExists(e)
+	log.Info(res)
+
 	InsertEvent(e)
 
 	log.WithField("event", e).Info("transformed order to event")
